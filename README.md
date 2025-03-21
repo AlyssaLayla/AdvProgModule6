@@ -31,3 +31,9 @@ Pada commit ini menunjukkan bahwa server yang berjalan pada satu thread memiliki
 
 5. Commit 5 Reflection Notes</br>
 Untuk memahami bagaimana ThreadPool bekerja, saya mengimplementasikan multithreading dalam server sederhana yang sebelumnya hanya berjalan dalam satu thread. Saya membuat struktur `ThreadPool` yang terdiri dari beberapa worker threads yang dapat mengeksekusi tugas secara paralel. Dalam proses ini, saya menggunakan message passing melalui channel untuk mendistribusikan tugas dari main thread ke worker threads, dengan mekanisme sinkronisasi menggunakan `Mutex` dan `Arc` agar workers dapat mengakses antrian tugas secara aman. Saat server menerima permintaan, tugas tersebut dikirim ke salah satu worker yang sedang tidak sibuk. Implementasi ini memungkinkan server menangani banyak permintaan sekaligus, mengatasi masalah blocking yang terjadi pada model single-threaded. Dalam proses pengerjaan, saya juga menghadapi error terkait tipe data yang tidak sesuai saat mendeklarasikan `JoinHandle`, yang berhasil saya selesaikan dengan membungkusnya dalam `Some()`. Dengan perubahan ini, server sekarang lebih responsif dan dapat melayani banyak klien secara bersamaan.
+---
+
+![Commit Bonus screen capture](/assets/images/commitbonus.jpg)
+
+6. Commit Bonus Reflection Notes</br>
+Dalam bonus ini, saya memodifikasi implementasi ThreadPool dengan mengganti metode new menjadi build untuk meningkatkan keamanan dan fleksibilitas dalam pembuatan pool thread. Saya menambahkan validasi agar ukuran ThreadPool tidak boleh nol, sehingga dapat mencegah error saat program berjalan. Jika ukuran yang diberikan tidak valid, metode build akan mengembalikan Err yang kemudian ditangani dengan unwrap_or_else di main.rs, memungkinkan program untuk keluar dengan pesan kesalahan yang jelas. Perubahan ini memastikan bahwa server tidak akan berjalan dengan konfigurasi yang tidak valid, sekaligus meningkatkan ketahanan sistem dalam menangani skenario yang tidak diinginkan.
